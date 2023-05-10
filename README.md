@@ -2,7 +2,7 @@
 This repository contains the code used in Derman et al., 2023.
 
 
-[readme_figure.png](/readme_figure.png)
+![readme_figure.png](/readme_figure.png)
 
 0. The minimally preprocessed pipeline is available 
 1. Frame censoring following
