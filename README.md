@@ -1,7 +1,6 @@
 # Individualized neonatal functional connectivity
 
-This repository contains the code for 
-Repository for 
+This repository contains the code for  
 
 > Derman D., Pham D. D., Mejia A. F., & Ferradal S. L. (2023). Surfaced-based Bayesian modeling reveals individual patterns of functional connectivity in neonates. ~INSERT DOI LINK~ (preprint)
 
