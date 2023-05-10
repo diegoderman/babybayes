@@ -18,4 +18,7 @@ The code is organized in different files as per the block diagram present in sup
 5. Template estimation.
 6. Individual Bayesian inference and masks.
 
-
+--------------------------------------------------------------------------
+- [ ] Citations
+- [ ] References
+- [ ] Summary of the paper?
