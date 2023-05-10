@@ -1,0 +1,16 @@
+Package: dhcpr
+Title: R package for dhcp management
+Version: 0.0.1
+Authors@R: 
+    person(given = "Diego",
+           family = "Derman",
+           role = c("aut", "cre"),
+           email = "dderman@iu.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package contains utility tools to manage the Developing Human Connectome Project open dataset.
+License: GPL-3
+Imports: ciftiTools
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
