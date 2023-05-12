@@ -161,15 +161,17 @@ def dvars(csvfile):
         mean_dvars = np.mean(subject_dvars[1:])[0]
         #zscore = stats.zscore(subject_dvars['0']) wrong
         min_volsOver = 1600
+        keep_vols = 1600
+        BOLD_length = 2299
         #threshold = 1.5*stats.iqr(zscore) + np.percentile(zscore, 75) wrong
         threshold = 1.5 * stats.iqr(subject_dvars[1:]) + np.percentile(subject_dvars[1:], 75)
 
         min_idx = 0
-        for i in range (2299-1600):
-            premin = min_volsOver
+        for i in range (BOLD_length-keep_vols):
+            previous_min = min_volsOver
             #print(np.count_nonzero((subject_dvars[i:i+1600]) > threshold))
-            min_volsOver = min(min_volsOver, np.count_nonzero(subject_dvars[i:i+1600] > threshold))
-            if premin != min_volsOver:
+            min_volsOver = min(min_volsOver, np.count_nonzero(subject_dvars[i:i+keep_vols] > threshold))
+            if previous_min != min_volsOver:
                     min_idx = i
     return [min_volsOver, min_idx, mean_dvars]
 
