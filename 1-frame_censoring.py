@@ -59,7 +59,8 @@ with open(subjects_pkl + '.pkl', "rb") as fh:
   subjects = pickle.load(fh)
 
 
-# main function
+####
+# main dvars function
 def dvars(csvfile):
 
     '''
@@ -101,7 +102,70 @@ def dvars(csvfile):
             if previous_min != min_volsOver:
                     min_idx = i
     return [min_volsOver, min_idx, mean_dvars]
+    
+####
+# main crop function 
 
+def crop(subid, sesid, start, period_length = 1600):
+    '''
+	 crop: crops BOLD timeseries from the DHCP subject subid session sesid from index start and for period_length.
+	 Saves in canonical DHCP 2nd release paths.
+    '''
+    
+    from shutil import rmtree
+    from tempfile import TemporaryDirectory
+    
+    # original preprocessed BOLD nifti.
+    bold = funcdir + '/sub-' + subid + "/ses-" + sesid + '/func/sub-' + subid + '_ses-' + sesid + '_task-rest_desc-preproc_bold.nii.gz'
+    # temporal directory for splitting operation
+    dir_split = tempfile.TemporaryDirectory().name + '/' + subid + "_sesid-" + sesid + '/' # /geode2/home/u020/dderman/Carbonate/dHCP_dataset/temp for the author
+    # make temporary directory
+    os.makedirs(dir_split, exist_ok=True)
+    # name root of splited volumes
+    fsplit = dir_split + 'vol_'
+    # make output canonical directory
+    dir_cropped = dhcp_root() + "/dhcp_fmri_cropped/" + subid
+    os.makedirs(dir_cropped, exist_ok=True)
+    # ouput filename
+    fcropped = dir_cropped + "/" + subid + "_ses-" + sesid + "_task-rest_desc-cropped_bold.nii.gz"
+    
+    # If not previously cropped
+    if not os.path.exists(fcropped):
+        print("Scrubbing " + subid)
+
+        # If it has not been split before
+        if not os.path.exists(dir_split + "vol_2000.nii.gz"):
+            print("Starting splitting at " + dir_split)
+            # FSLSPLIT
+            os.system('fslsplit ' + bold + " " + fsplit)
+            
+        # Start merging section
+        # This little function adds zero padding to the name of each split volume.
+        def add_prestr(n):
+            return fsplit + str(n).zfill(4) + '.nii.gz'
+        
+        # range of indices to save
+        vol_range = list()
+        vol_range.extend(range(start, start + period_length))
+        aux = map(add_prestr, vol_range)
+        
+        # start writing shell command for FSLMERGE
+        # fslmerge -t output_fname [splitted volumes] 
+        command_list = list(aux)
+        command_list.insert(0, fcropped)
+        command_list.insert(0, "-t")
+        command_list.insert(0, "fslmerge")
+        # run shell command FSLSPLIT
+        process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        print(stdout)
+        print(stderr)
+        
+        # When finished, delete temp files.
+        print("Delete temp files for " + subid)
+        rmtree(dir_split, ignore_errors=True)
+
+####
 # main thread
 
 # initialize rows of final table
@@ -142,9 +206,13 @@ for participant in subjects.iterrows():
     else:
         print("warning: dvars does not exist. sub: " + subid)
         
+        
+    ##
+    # As next step, crop BOLD session
+    crop(subid, participant['session_id'], index_dvars)
+        
 # discard first (empty) row.
 rows.pop(0)
-
 
 # tidy final table
 subjects_out = pd.DataFrame(rows, columns=['participant_id', 'singleton', 'birth_age', 'sex', 'birth_weight',
@@ -154,3 +222,8 @@ subjects_out = pd.DataFrame(rows, columns=['participant_id', 'singleton', 'birth
 # Save in pkl and csv on subject_dvars
 subjects_out.to_pickle(subjects_dvars + '.pkl')
 subjects_out.to_csv(subjects_dvars + '.csv')
+
+
+
+
+
