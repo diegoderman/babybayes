@@ -2,7 +2,7 @@
 
 This repository contains the code for  
 
-> Derman D., Pham D. D., Mejia A. F., & Ferradal S. L. (2023). Individual patterns of functional connectivity in neonates as revealed by surfaced-based Bayesian modeling. (preprint)
+> Derman D., Pham D. D., Mejia A. F., & Ferradal S. L. (2023). Individual patterns of functional connectivity in neonates as revealed by surfaced-based Bayesian modeling. [bioRxiv preprint](https://www.biorxiv.org/content/10.1101/2023.07.24.550218v1)
 
 ## Overview
 
